@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4><i class="bi bi-graph-up me-2"></i>Relatórios</h4>
+  <a href="{{ url_for('relatorios.exportar_excel') }}" class="btn btn-success btn-sm">
+    <i class="bi bi-file-earmark-excel me-1"></i>Exportar Excel
+  </a>
+</div>
+
+<!-- KPIs -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card p-3 text-center">
+      <div class="text-muted small">Total de produtos</div>
+      <div class="display-6 fw-bold text-primary">{{ total_produtos }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 text-center">
+      <div class="text-muted small">Produtos críticos</div>
+      <div class="display-6 fw-bold {% if total_criticos > 0 %}text-danger{% else %}text-success{% endif %}">
+        {{ total_criticos }}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 text-center">
+      <div class="text-muted small">Entradas este mês</div>
+      <div class="display-6 fw-bold text-success">{{ entradas_mes }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 text-center">
+      <div class="text-muted small">Saídas este mês</div>
+      <div class="display-6 fw-bold text-danger">{{ saidas_mes }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Produtos críticos -->
+  <div class="col-md-6">
+    <h5 class="mb-3">
+      <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+      Produtos abaixo do mínimo
+    </h5>
+    {% if criticos %}
+    <div class="card">
+      <ul class="list-group list-group-flush">
+        {% for p in criticos %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <a href="{{ url_for('produtos.detalhe', id=p.id) }}" class="text-decoration-none fw-semibold">
+              {{ p.nome }}
+            </a>
+            <br><code class="small text-muted">{{ p.codigo }}</code>
+          </div>
+          <div class="text-end">
+            <span class="text-danger fw-bold">{{ p.saldo_atual }}</span>
+            <span class="text-muted small"> / mín {{ p.estoque_minimo }} {{ p.unidade }}</span>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% else %}
+      <div class="alert alert-success">
+        <i class="bi bi-check-circle me-2"></i>Todos os produtos estão acima do estoque mínimo.
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Últimas movimentações -->
+  <div class="col-md-6">
+    <h5 class="mb-3">
+      <i class="bi bi-clock-history me-2"></i>Últimas movimentações
+    </h5>
+    <div class="card">
+      <ul class="list-group list-group-flush">
+        {% for m in ultimas %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <a href="{{ url_for('produtos.detalhe', id=m.produto_id) }}" class="text-decoration-none">
+              {{ m.produto.nome }}
+            </a>
+            <br>
+            <small class="text-muted">{{ m.criado_em.strftime('%d/%m/%Y %H:%M') }} · {{ m.usuario.nome }}</small>
+          </div>
+          <div>
+            {% if m.tipo == 'entrada' %}
+              <span class="badge bg-success-subtle text-success">+{{ m.quantidade }}</span>
+            {% else %}
+              <span class="badge bg-danger-subtle text-danger">-{{ m.quantidade }}</span>
+            {% endif %}
+          </div>
+        </li>
+        {% else %}
+        <li class="list-group-item text-muted text-center py-3">Sem movimentações ainda.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

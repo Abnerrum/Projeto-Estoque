@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if produto else 'Novo' }} Produto{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4>{{ 'Editar' if produto else 'Novo' }} Produto</h4>
+      <a href="{{ url_for('produtos.listar') }}" class="btn btn-outline-secondary btn-sm">Voltar</a>
+    </div>
+    <div class="card p-4">
+      <form method="POST">
+        <div class="row g-3">
+          {% if not produto %}
+          <div class="col-md-4">
+            <label class="form-label">Código *</label>
+            <input type="text" name="codigo" class="form-control text-uppercase" required
+                   placeholder="Ex: PROD-001">
+          </div>
+          {% endif %}
+          <div class="col-md-{{ '8' if not produto else '12' }}">
+            <label class="form-label">Nome *</label>
+            <input type="text" name="nome" class="form-control" required
+                   value="{{ produto.nome if produto else '' }}">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Descrição</label>
+            <textarea name="descricao" class="form-control" rows="2">{{ produto.descricao if produto else '' }}</textarea>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Unidade</label>
+            <select name="unidade" class="form-select">
+              {% for u in ['un', 'kg', 'g', 'L', 'mL', 'cx', 'pc', 'm', 'cm'] %}
+                <option value="{{ u }}" {% if produto and produto.unidade == u %}selected{% endif %}>{{ u }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Estoque mínimo</label>
+            <input type="number" name="estoque_minimo" class="form-control" min="0"
+                   value="{{ produto.estoque_minimo if produto else 0 }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Categoria</label>
+            <select name="categoria_id" class="form-select">
+              <option value="">Sem categoria</option>
+              {% for cat in categorias %}
+                <option value="{{ cat.id }}"
+                  {% if produto and produto.categoria_id == cat.id %}selected{% endif %}>
+                  {{ cat.nome }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12 mt-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-lg me-1"></i>{{ 'Salvar alterações' if produto else 'Cadastrar produto' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

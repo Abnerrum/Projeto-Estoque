@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-4">
+    <div class="card p-4">
+      <h4 class="mb-4 text-center"><i class="bi bi-boxes me-2"></i>Sistema de Estoque</h4>
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" required autofocus>
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Senha</label>
+          <input type="password" name="senha" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+      </form>
+      <hr>
+      <a href="{{ url_for('auth.registro') }}" class="btn btn-outline-secondary w-100">Criar conta</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
