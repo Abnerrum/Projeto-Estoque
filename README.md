@@ -31,7 +31,7 @@ Sistema web de controle de estoque com cadastro de produtos, entrada/saída e re
 
 ```bash
 # 1. Clone e entre na pasta
-git clone https://github.com/seu-usuario/estoque.git
+git clone https://github.com/Abnerrum/Projeto-Estoque
 cd estoque
 
 # 2. Crie o ambiente virtual
